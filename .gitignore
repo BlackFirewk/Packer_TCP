@@ -32,4 +32,7 @@
 *.app
 
 # Directory
-/run
+run/debug/*
+run/deploy/*.tar.gz
+run/hiPacker_soft/HiPacker/*
+run/release/*
