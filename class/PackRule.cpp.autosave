@@ -1,0 +1,66 @@
+#include "PackRule.h"
+
+PackRule::PackRule()
+{
+
+}
+
+string PackRule::getTickNumber() const
+{
+    return tickNumber;
+}
+
+void PackRule::setTickNumber(const string &value)
+{
+    tickNumber = value;
+}
+
+string PackRule::getPerPackQuant() const
+{
+    return perPackQuant;
+}
+
+void PackRule::setPerPackQuant(const string &value)
+{
+    perPackQuant = value;
+}
+
+string PackRule::getPackRule() const
+{
+    return packRule;
+}
+
+void PackRule::setPackRule(const string &value)
+{
+    packRule = value;
+}
+
+string PackRule::getSabLength() const
+{
+    return sabLength;
+}
+
+void PackRule::setSabLength(const string &value)
+{
+    sabLength = value;
+}
+
+string PackRule::getOrderTotal() const
+{
+    return orderTotal;
+}
+
+void PackRule::setOrderTotal(const string &value)
+{
+    orderTotal = value;
+}
+
+string PackRule::getOrderOrigin() const
+{
+    return orderOrigin;
+}
+
+void PackRule::setOrderOrigin(const string &value)
+{
+    orderOrigin = value;
+}
