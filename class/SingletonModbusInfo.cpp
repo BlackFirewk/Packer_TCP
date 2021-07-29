@@ -2,29 +2,30 @@
 
 SingletonModbusInfo::SingletonModbusInfo()
 {
-    cutPlcStateReg = new uint16_t[2];
-    memset(cutPlcStateReg, 0, 4);
+    int size16 = sizeof(uint16_t);
+    cutPlcStateReg = new uint16_t[CUTTER_STATE_REG_SIZE];
+    memset(cutPlcStateReg, 0, CUTTER_STATE_REG_SIZE * size16);
 
-    currentZipperLength = new uint16_t[2];
-    memset(currentZipperLength, 0, 2);
+    currentZipperLength = new uint16_t[ZIPPER_LENGTH_REG_SIZE];
+    memset(currentZipperLength, 0, ZIPPER_LENGTH_REG_SIZE * size16);
 
-    employeeIDReg = new uint16_t[64];
-    memset(employeeIDReg, 0, 128);
+    employeeIDReg = new uint16_t[EMPLOYEE_ID_REG_SIZE];
+    memset(employeeIDReg, 0, EMPLOYEE_ID_REG_SIZE * size16);
 
-    workTickIDReg = new uint16_t[64];
-    memset(workTickIDReg, 0, 128);
+    workTickIDReg = new uint16_t[WORK_TICKET_ID_REG_SIZE];
+    memset(workTickIDReg, 0, WORK_TICKET_ID_REG_SIZE * size16);
 
-    workTickApplyCodeReg = new uint16_t[64];
-    memset(workTickApplyCodeReg, 0, 128);
+    workTickApplyCodeReg = new uint16_t[WORK_TICKET_APPLY_CODE_REG_SIZE];
+    memset(workTickApplyCodeReg, 0, WORK_TICKET_APPLY_CODE_REG_SIZE * size16);
 
-    orderQuantityReg = new uint16_t[2];
-    memset(orderQuantityReg, 0, 4);
+    orderQuantityReg = new uint16_t[ORDER_QUANT_REG_SIZE];
+    memset(orderQuantityReg, 0, ORDER_QUANT_REG_SIZE * size16);
 
-    barCodeReg = new uint16_t[64];
-    memset(barCodeReg, 0, 128);
+    barCodeReg = new uint16_t[BAR_CODE_REG_SIZE];
+    memset(barCodeReg, 0, BAR_CODE_REG_SIZE * size16);
 
-    packerStateReg = new uint16_t[5];
-    memset(packerStateReg, 0, 10);
+    packerStateReg = new uint16_t[PACKER_STATE_REG_SIZE];
+    memset(packerStateReg, 0, PACKER_STATE_REG_SIZE * size16);
 }
 
 SingletonModbusInfo::~SingletonModbusInfo()

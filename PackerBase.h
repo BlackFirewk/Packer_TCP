@@ -19,6 +19,9 @@ using namespace std;
 #ifndef SAB_R_FAIL
     #define SAB_R_FAIL           0        // 定义失败返回码
 #endif
+#ifndef SAB_R_ERROR
+    #define SAB_R_ERROR          -1       // 定义错误返回码
+#endif
 //#define DEBUG
 
 typedef union {

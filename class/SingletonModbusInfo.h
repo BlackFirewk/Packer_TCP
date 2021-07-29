@@ -2,6 +2,16 @@
 #define SINGLETONMODBUSINFO_H
 #include "PackerBase.h"
 
+#define CUTTER_STATE_REG_SIZE   2
+#define ZIPPER_LENGTH_REG_SIZE  2
+#define EMPLOYEE_ID_REG_SIZE    64
+#define WORK_TICKET_ID_REG_SIZE 64
+#define WORK_TICKET_APPLY_CODE_REG_SIZE 64
+#define ORDER_QUANT_REG_SIZE    2
+#define BAR_CODE_REG_SIZE       64
+#define PACKER_STATE_REG_SIZE   5
+
+
 class SingletonModbusInfo
 {
 public:

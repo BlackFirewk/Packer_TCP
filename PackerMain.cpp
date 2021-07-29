@@ -74,9 +74,6 @@ void SubThreadInit(ModbusProcess* modbus)
     pthread_t modbusCommonThread;              // modbus通讯线程
 
     modbus->ModbusInit();
-    #ifdef USE_MODBUS_LIB
-    int result = pthread_create(&modbusCommonThread, NULL, ModbusTcpProcess, modbus);    // 建立子线程，负责modbus通讯
-    #endif
     int result = pthread_create(&modbusCommonThread, NULL, ModbusTcpSocketProcess, modbus);
     if (result != 0) {
         LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "modbus thread create faliure.");

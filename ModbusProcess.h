@@ -46,13 +46,6 @@ public:
     void ModbusInit();
     bool checkTcpHeartBeat(int modbusConnectNum);
 
-    #ifdef USE_MODBUS_LIB
-    UserModbus* getPackerModbusConnect() const;
-    void setPackerModbusConnect(UserModbus* value);
-
-    UserModbus* getCutModbusConnect() const;
-    void setCutModbusConnect(UserModbus* value);
-    #endif
     UserLogger* getModbusLogger() const;
     void setModbusLogger(UserLogger* value);
     PackerModbusTcp* getPackertModbusTcp() const;
@@ -64,12 +57,7 @@ private:
     void ModbusTcpInit(const char*, const char*, PackerTcpSocket*, int);
 
 private:
-    #ifdef USE_MODBUS_LIB
-    UserModbus* cutModbusConnect;
-    UserModbus* packerModbusConnect;
-    #endif
     UserTimer* modbusTimer;
-
     PackerModbusTcp* packertModbusTcp;
 };
 

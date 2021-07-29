@@ -36,3 +36,4 @@ run/debug/*
 run/deploy/*.tar.gz
 run/hiPacker_soft/HiPacker/*
 run/release/*
+run/deploy/hiPacker_soft/*
