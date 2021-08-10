@@ -64,12 +64,18 @@ int PrinterProcess::PrintLabel(const LabelInfoData& labPrinInfo)
     font_option font;               // 字体
     code128_option code128;         // 条形码
     print_option prints;
+    PrinterProcess* printProces = new PrinterProcess();
 
     memset(printText, 0, sizeof(printText));
 
     exeResult = openDevice(SingletonPrinter::GetInstance().getDevice());          // 打开打印设备
     if (exeResult != 0) {
-        return  SAB_R_FAIL;
+        /** 打印机初始化　**/
+        exeResult = printProces->PrinterInit();
+        if (exeResult != SAB_R_OK) {
+            delete printProces;
+            return SAB_R_FAIL;
+        }
     }
 
     startPrint();            // 开始打印
@@ -129,5 +135,7 @@ int PrinterProcess::PrintLabel(const LabelInfoData& labPrinInfo)
     */
     endPrint();               // 结束打印
     closeDevice(SingletonPrinter::GetInstance().getDevice());      // 关闭设备
-    return     SAB_R_OK;
+
+    delete printProces;
+    return SAB_R_OK;
 }

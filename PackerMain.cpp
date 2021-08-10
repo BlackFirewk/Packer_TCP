@@ -92,11 +92,11 @@ int getPackerRule(ModbusProcess& modbusProcesser, HttpConnect& httpPackConnect)
 {
     int processResult = SAB_R_FAIL;
 
-    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "Send Scan Gun Trigger Signal.");
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "Send Scan Gun Trigger Signal.");
     modbusProcesser.scanGunTriggerSignal = 1;
     SingletonTimerScheduler::GetInstance().getTimer1()->Start(modbusProcesser.ScanSignalClean, 5 * 1000, UserTimer::TimerType::ONCE);
 
-    LOG4CXX_DEBUG(SingletonUserLogger::GetInstance().getLogger(), "Begin requesting wrapper rules");
+    LOG4CXX_DEBUG(SingletonUserLogger::GetInstance().getLogger(), "begin requesting pack rules...");
 
     /** 初始化接口信息 **/
     ERPInterface* erpInterface = new ERPInterface("AutoPackingRulebyLsbhPP", "lsbh");
@@ -107,8 +107,6 @@ int getPackerRule(ModbusProcess& modbusProcesser, HttpConnect& httpPackConnect)
         LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "request packaging rules faliure.");
         delete erpInterface;
         return processResult;
-    } else {
-        LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "request packaging rules success.");
     }
     /**  处理数据 **/
     SingletonModbusInfo::GetInstance().setSiglePackQuant(atoi(SingletonPackerData::GetInstance().getPackRulInfo()->getPerPackQuant().c_str()));
@@ -123,6 +121,8 @@ int getPackerRule(ModbusProcess& modbusProcesser, HttpConnect& httpPackConnect)
                  + ", zipper length: " +  to_string(SingletonModbusInfo::GetInstance().getZipperLength())
                  + ", sigle pack quant: " + to_string(SingletonModbusInfo::GetInstance().getSiglePackQuant())
                  + "}");
+
+    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "request packaging rules success.");
     delete erpInterface;
     return processResult;
 }
@@ -241,7 +241,7 @@ int PrintTriggerProcess(PrinterProcess* printProces, int operation)
 int getScatteredOrderQuant(ModbusProcess& modbusProcesser, HttpConnect& httpPackConnect, F_Data& lengthData)
 {
     int processResult = SAB_R_FAIL;
-    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "Begin requesting work zipper size");
+    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "begin request work zipper size");
 
     /** 初始化接口信息 **/
     ERPInterface* erpInterface = new ERPInterface("AutoPackingRulebyLsbhCCSL", "info");
@@ -263,8 +263,8 @@ int getScatteredOrderQuant(ModbusProcess& modbusProcesser, HttpConnect& httpPack
     SingletonModbusInfo::GetInstance().setZipperLength((uint16_t)(lengthData.floatForm * 10));
     LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "save_ZipperLength_as: " + to_string(SingletonModbusInfo::GetInstance().getZipperLength()) + "mm");
     LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "save_ScatteredOrderQuant_as: " + to_string(SingletonModbusInfo::GetInstance().getSubScatteredOrderQuant()));
-    LOG4CXX_DEBUG(SingletonUserLogger::GetInstance().getLogger(), "finsh requesting work zipper size");
-    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "Send Scan Gun Trigger Signal.");
+    LOG4CXX_DEBUG(SingletonUserLogger::GetInstance().getLogger(), "requesting work zipper size success");
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "send scan gun trigger signal.");
     modbusProcesser.scanGunTriggerSignal = 1;
     SingletonTimerScheduler::GetInstance().getTimer1()->Start(modbusProcesser.ScanSignalClean, 5 * 1000, UserTimer::TimerType::ONCE);
 

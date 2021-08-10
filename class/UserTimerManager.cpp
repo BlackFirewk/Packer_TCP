@@ -41,7 +41,7 @@ void UserTimerManager::DetectTimers()
         UserTimer* timer = heap_[0].timer;
         RemoveTimer(timer);
         timer->OnTimer(now);
-        LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "The timer has arrived");
+//        LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "The timer has arrived");
     }
 }
 
