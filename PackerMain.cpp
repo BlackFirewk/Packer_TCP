@@ -92,17 +92,16 @@ int getPackerRule(ModbusProcess& modbusProcesser, HttpConnect& httpPackConnect)
 {
     int processResult = SAB_R_FAIL;
 
-//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "Send Scan Gun Trigger Signal.");
+    LOG4CXX_DEBUG(SingletonUserLogger::GetInstance().getLogger(), "begin requesting pack rules...");
     modbusProcesser.scanGunTriggerSignal = 1;
     SingletonTimerScheduler::GetInstance().getTimer1()->Start(modbusProcesser.ScanSignalClean, 5 * 1000, UserTimer::TimerType::ONCE);
-
-    LOG4CXX_DEBUG(SingletonUserLogger::GetInstance().getLogger(), "begin requesting pack rules...");
 
     /** 初始化接口信息 **/
     ERPInterface* erpInterface = new ERPInterface("AutoPackingRulebyLsbhPP", "lsbh");
 
     /** 发起erp请求　**/
     processResult = erpInterface->ErpProcessor(httpPackConnect, SingletonPackerData::GetInstance().getTickApplCode());
+
     if (processResult == SAB_R_FAIL) {
         LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "request packaging rules faliure.");
         delete erpInterface;
@@ -304,9 +303,6 @@ int main()
     packerIterator = SingletonPropertiesTable::GetInstance().getPropertiesTable().find(ERP_PORT);
     erpConnect->setHostPort(atoi(packerIterator->second.data()));
 
-
-//    ERPInterface* packerRuler = new ERPInterface("AutoPackingRulebyLsbh", "lsbh");
-
     /** 其他初始化 **/
     /** 各类数据初始化　**/
     SingletonPackerData::GetInstance();
@@ -322,6 +318,7 @@ int main()
     string applyCode;
     string workID;
     string employeeID;
+
     /** 主程序 **/
     while (1) {
         applyCode.assign((char*)SingletonModbusInfo::GetInstance().getWorkTickApplyCodeReg()); //转化工票申请码

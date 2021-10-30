@@ -43,7 +43,7 @@ int main()
     erpConnect->setHostPort(atoi(packerIterator->second.data()));
 
 
-//    ERPInterface* packerRuler = new ERPInterface("AutoPackingRulebyLsbh", "lsbh");
+    ERPInterface* packerRuler = new ERPInterface("AutoPackingRulebyLsbh", "lsbh");
 
     /** 其他初始化 **/
     /** 各类数据初始化　**/
@@ -56,6 +56,8 @@ int main()
 
     /** 子线程初始化　**/
     LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "欢迎使用");
+
+    packerRuler->ErpProcessor(*erpConnect, "test");
 //    ModbusProcess* modbus = new ModbusProcess();
 //    SubThreadInit(modbus);
 //    MODBUS_INFO* modbusInfo = modbus->modbusCommun;

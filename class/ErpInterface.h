@@ -25,7 +25,7 @@ public:
 private:
     string interfaceName;
     string interfaceAttribute;
-    xml_node CheckXml(xml_document& srcXml);
+    xml_node CheckXml(const xml_document& srcXml);
     string bulidErpRequestInfo(string&, string&, const string&);
 };
 

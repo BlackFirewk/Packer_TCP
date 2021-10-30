@@ -49,7 +49,7 @@ ModbusProcess::UserModbus::UserModbus(string address, int port, int slaveNum)
 ************************************/
 void ModbusProcess::ModbusInit()
 {
-//   ModbusTcpInit(MODBUS1_HOST, MODBUS1_PORT, packertModbusTcp->getCutTcpSocket(), 2);
+    ModbusTcpInit(MODBUS1_HOST, MODBUS1_PORT, packertModbusTcp->getCutTcpSocket(), 2);
 
     ModbusTcpInit(MODBUS2_HOST, MODBUS2_PORT, packertModbusTcp->getPackerTcpSocket(), 1);
 }
@@ -191,7 +191,7 @@ int CutterDataProcessor(PackerModbusTcp* modbustcp_socket, uint16_t& cutter_stat
     if (result < 0) {
         return SAB_R_ERROR;
     }
-    memcpy(SingletonModbusInfo::GetInstance().getEmployeeIDReg(), readBuffer, 128);
+    memcpy(SingletonModbusInfo::GetInstance().getEmployeeIDReg(), readBuffer, EMPLOYEE_ID_REG_SIZE * sizeof(uint16_t));
 
     memset(readBuffer, 0, ZIPPER_LENGTH_REG_SIZE);
     result = modbustcp_socket->ReadRegisters(*modbustcp_socket->getCutTcpSocket(), 199, ZIPPER_LENGTH_REG_SIZE, readBuffer);
@@ -212,6 +212,9 @@ int CutterDataProcessor(PackerModbusTcp* modbustcp_socket, uint16_t& cutter_stat
         writeBuffer[0] = 0;
     }
     /** write packer state to cutter plc **/
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "包装机启动信号: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[0]));
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "包装机暂停信号: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[1]));
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "包装机就绪信号: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[2]));
     result = modbustcp_socket->WriteRegisters(*modbustcp_socket->getCutTcpSocket(), 0, 3,
              SingletonModbusInfo::GetInstance().getPackerStateReg());
     if (result < 0) {
@@ -233,7 +236,7 @@ int CutterDataProcessor(PackerModbusTcp* modbustcp_socket, uint16_t& cutter_stat
 ************************************/
 int PackerDataProcessor(PackerModbusTcp* modbustcp_socket, uint16_t& cutter_state, uint16_t& scangun_trigger)
 {
-    static bool flagPlcStateChanged = true;//　切断机状态变化信号
+    static bool flagPlcStateChanged = false;//　切断机状态变化信号
 //    static bool flagScanGunTriggered = false;
     int result = 0;
     uint8_t dataLen = 0;
@@ -250,6 +253,9 @@ int PackerDataProcessor(PackerModbusTcp* modbustcp_socket, uint16_t& cutter_stat
         return SAB_R_ERROR;
     }
     UniversalTool::HighLowSwap(SingletonModbusInfo::GetInstance().getPackerStateReg(), readBuffer, 6);
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "包装机启动信号: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[0]));
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "包装机暂停信号: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[1]));
+//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "包装机就绪信号: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[2]));
     memset(readBuffer, 0, 3);
 
     /**  get packer state from packer screen **/
@@ -257,20 +263,13 @@ int PackerDataProcessor(PackerModbusTcp* modbustcp_socket, uint16_t& cutter_stat
     if (result < 0) {
         return SAB_R_ERROR;
     }
-    UniversalTool::HighLowSwap(SingletonModbusInfo::GetInstance().getPackerStateReg(), readBuffer, 10);
+    UniversalTool::HighLowSwap(SingletonModbusInfo::GetInstance().getPackerProcReg(), readBuffer, 10);
     memset(readBuffer, 0, 5);
-    SingletonModbusInfo::GetInstance().setOrderFinish(SingletonModbusInfo::GetInstance().getPackerStateReg()[0]);
-    SingletonModbusInfo::GetInstance().setPrintTrig(SingletonModbusInfo::GetInstance().getPackerStateReg()[1]);
-    SingletonModbusInfo::GetInstance().setPrintFinish(SingletonModbusInfo::GetInstance().getPackerStateReg()[2]);
-    SingletonModbusInfo::GetInstance().setThisPackWeight(SingletonModbusInfo::GetInstance().getPackerStateReg()[3]);
-    SingletonModbusInfo::GetInstance().setThisPackQuant(SingletonModbusInfo::GetInstance().getPackerStateReg()[4]);
-
-//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "order_finish_flag: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[0]));
-//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "print_trigger_flag: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[1]));
-//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "print_finish_flag: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[2]));
-//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "this_pack_weight: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[3]));
-//    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "this_pack_quant: " + to_string(SingletonModbusInfo::GetInstance().getPackerStateReg()[0]));
-
+    SingletonModbusInfo::GetInstance().setOrderFinish(SingletonModbusInfo::GetInstance().getPackerProcReg()[0]);
+    SingletonModbusInfo::GetInstance().setPrintTrig(SingletonModbusInfo::GetInstance().getPackerProcReg()[1]);
+    SingletonModbusInfo::GetInstance().setPrintFinish(SingletonModbusInfo::GetInstance().getPackerProcReg()[2]);
+    SingletonModbusInfo::GetInstance().setThisPackWeight(SingletonModbusInfo::GetInstance().getPackerProcReg()[3]);
+    SingletonModbusInfo::GetInstance().setThisPackQuant(SingletonModbusInfo::GetInstance().getPackerProcReg()[4]);
 
     /** get print again signal from packer screen **/
     result = modbustcp_socket->ReadRegisters(*modbustcp_socket->getPackerTcpSocket(), 299, 1, readBuffer);
@@ -396,7 +395,6 @@ void* ModbusTcpSocketProcess(void* arg)
 
         } else {
             modbusTcpSocket->getCutTcpSocket()->Disconnect();
-
             modbusTcpSocket->getPackerTcpSocket()->Disconnect();
 
             usleep(1000 * 1000 * 10);

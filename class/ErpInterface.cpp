@@ -49,7 +49,7 @@ void ERPInterface::setInterfaceAttribute(const string& value)
 * @Operation: modify
 * @Return   : process result
 ************************************************************************/
-xml_node ERPInterface::CheckXml(xml_document& srcXml)
+xml_node ERPInterface::CheckXml(const xml_document& srcXml)
 {
     string analysisResult;
     xml_node root;
@@ -120,7 +120,6 @@ string ERPInterface::bulidErpRequestInfo(string& api_name, string& api_pro, cons
 
     sendInfo = sendInfo + api_name + afAPI + api_pro + afAPIpro + interface_param \
                + afinf + api_pro + afinfPro + api_name + endstr;      // 字符连接
-    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), sendInfo);
     return sendInfo;
 }
 /************************************
@@ -312,7 +311,7 @@ int ERPInterface::ErpProcessor(HttpConnect http, const string& interface_param)
 
     httplib::Client  client(http.getIpAddress(), http.getHostPort());
     sendInfo = bulidErpRequestInfo(interfaceName, interfaceAttribute, interface_param);
-
+    LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), sendInfo);
     /** request erp **/
     auto erpRes = client.Post("/Service1.asmx", sendInfo, "text/xml");
     if ((!erpRes) || (200 != erpRes->status)) {
@@ -320,13 +319,13 @@ int ERPInterface::ErpProcessor(HttpConnect http, const string& interface_param)
         LOG4CXX_ERROR(SingletonUserLogger::GetInstance().getLogger(), "current call interface name:" + interfaceName);
         return SAB_R_FAIL;
     }
+
     string xmlStr = erpRes->body;
     LOG4CXX_INFO(SingletonUserLogger::GetInstance().getLogger(), "ResponeData: " + xmlStr);
     if (xmlStr.empty()) {
         LOG4CXX_ERROR(SingletonUserLogger::GetInstance().getLogger(), "ResponeData is empty!");
         return SAB_R_FAIL;
     }
-
     xml_document doc;
     xml_node  checkResultElement;
 

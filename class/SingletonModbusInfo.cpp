@@ -26,6 +26,9 @@ SingletonModbusInfo::SingletonModbusInfo()
 
     packerStateReg = new uint16_t[PACKER_STATE_REG_SIZE];
     memset(packerStateReg, 0, PACKER_STATE_REG_SIZE * size16);
+
+    packerProcReg = new uint16_t[PACKER_PROC_REG_SIZE];
+    memset(packerProcReg, 0, PACKER_PROC_REG_SIZE * size16);
 }
 
 SingletonModbusInfo::~SingletonModbusInfo()
@@ -89,6 +92,11 @@ uint16_t* SingletonModbusInfo::getBarCodeReg()
 uint16_t* SingletonModbusInfo::getPackerStateReg()
 {
     return packerStateReg;
+}
+
+uint16_t* SingletonModbusInfo::getPackerProcReg()
+{
+    return packerProcReg;
 }
 
 uint16_t SingletonModbusInfo::getPackerReady() const

@@ -9,7 +9,8 @@
 #define WORK_TICKET_APPLY_CODE_REG_SIZE 32
 #define ORDER_QUANT_REG_SIZE    2
 #define BAR_CODE_REG_SIZE       32
-#define PACKER_STATE_REG_SIZE   5
+#define PACKER_STATE_REG_SIZE   3
+#define PACKER_PROC_REG_SIZE    5
 
 
 class SingletonModbusInfo
@@ -64,6 +65,7 @@ public:
     void setPackerReady(const uint16_t& value);
 
     uint16_t* getPackerStateReg();
+    uint16_t* getPackerProcReg();
     uint16_t* getBarCodeReg();
     uint16_t* getOrderQuantityReg();
     uint16_t* getWorkTickApplyCodeReg();
@@ -87,6 +89,7 @@ private:
     uint16_t* orderQuantityReg;     // 存放0:订单总量 1:每包数量
     uint16_t* barCodeReg;           // 存放条码号
     uint16_t* packerStateReg;       // 存放包装机状态信号
+    uint16_t* packerProcReg;        // 存放包装机其他信号
 
     // read
     uint16_t packerReady;           // 包装机就绪
